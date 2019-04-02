@@ -1,0 +1,1 @@
+java -classpath "C:\Users\Robert\Google Drive\sudoku\bin" sudoku.Sudoku
