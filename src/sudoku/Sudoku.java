@@ -107,6 +107,7 @@ class SudokuWorker
 				
 				System.out.println("Current Generation: " + (currentGen + 1));
 				System.out.println("Current average fitness: " + getAverageFitness());
+				System.out.println("Current total fitness: " + getTotalFitness());
 				
 				currentGen++;
 			}
@@ -116,6 +117,7 @@ class SudokuWorker
 				System.out.println("Solution found at generation: " + currentGen);
 			}
 		}
+		System.out.println("No solution has been found.");
 	}
 	
 	private boolean checkIfSolutionFound(SudokuBoard solutionBoard, SudokuBoard[][] sudokuPopGen, int currentGen) 
@@ -179,6 +181,18 @@ class SudokuWorker
 		}
 
 		return averageFitness / pop_size;
+	}
+	
+	public int getTotalFitness()
+	{
+		int totalFitness = 0;
+
+		for (int i = 0; i < pop_size; i++)
+		{
+			totalFitness += sudokuPopGen[0][i].getFitness();
+		}
+
+		return totalFitness;
 	}
 
 	public void populateRandomly(int[][] arr, SecureRandom rand)

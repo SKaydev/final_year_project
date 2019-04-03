@@ -1,6 +1,8 @@
 package sudoku;
 
 import java.security.SecureRandom;
+import java.util.List;
+import java.util.Vector;
 import java.util.stream.IntStream;
 
 public class Crossover 
@@ -62,16 +64,16 @@ public class Crossover
 			{
 				switch(operator)
 				{
-				case 1:
-					performOnePointCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand);
-				case 2:
-					performTwoPointCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand);
-				case 3:
-					performPMXCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand);
-				case 4:
-					performUniformSwapCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand);
-				case 5:
-					performCycleCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand);
+					case 1:
+						performOnePointCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand); break;
+					case 2:
+						performTwoPointCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand); break;
+					case 3:
+						performPMXCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand); break;
+					case 4:
+						performUniformSwapCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand); break;
+					case 5:
+						performCycleCrossover(num_elements, solutionBoard, sudokuPopGen, currentGen, rand); break;
 				}
 				num_elements++;
 			}
@@ -83,9 +85,14 @@ public class Crossover
 	{
 		SudokuBoard parentA = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
 		SudokuBoard parentB = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
-
-		SudokuBoard childA = parentA;
-		SudokuBoard childB = parentB;
+		
+		SudokuBoard childA = new SudokuBoard(true, rand);
+		childA.setSudokuBoardMap(parentA.getSudokuBoardMap());
+		childA.setIsImmutable(parentA.getIsImmutable());
+		
+		SudokuBoard childB = new SudokuBoard(true, rand);
+		childB.setSudokuBoardMap(parentB.getSudokuBoardMap());
+		childB.setIsImmutable(parentB.getIsImmutable());
 		
 		int length = rand.nextInt(9);
 		int row = rand.nextInt(9);
@@ -133,8 +140,13 @@ public class Crossover
 		SudokuBoard parentA = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
 		SudokuBoard parentB = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
 
-		SudokuBoard childA = parentA;
-		SudokuBoard childB = parentB;
+		SudokuBoard childA = new SudokuBoard(true, rand);
+		childA.setSudokuBoardMap(parentA.getSudokuBoardMap());
+		childA.setIsImmutable(parentA.getIsImmutable());
+		
+		SudokuBoard childB = new SudokuBoard(true, rand);
+		childB.setSudokuBoardMap(parentB.getSudokuBoardMap());
+		childB.setIsImmutable(parentB.getIsImmutable());
 		
 		int lengthA = rand.nextInt(9);
 		int lengthB = rand.nextInt(9);
@@ -190,7 +202,9 @@ public class Crossover
 		SudokuBoard parentA = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
 		SudokuBoard parentB = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
 
-		SudokuBoard child = parentA;
+		SudokuBoard child = new SudokuBoard(true, rand);
+		child.setSudokuBoardMap(parentA.getSudokuBoardMap());
+		child.setIsImmutable(parentA.getIsImmutable());
 		
 		int lengthA = rand.nextInt(9);
 		int lengthB = rand.nextInt(9);
@@ -268,7 +282,10 @@ public class Crossover
 		SudokuBoard parentA = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
 		SudokuBoard parentB = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
 
-		SudokuBoard child = parentA;
+		SudokuBoard child = new SudokuBoard(true, rand);
+		child.setSudokuBoardMap(parentA.getSudokuBoardMap());
+		child.setIsImmutable(parentA.getIsImmutable());
+		
 		int map[][] = new int[9][9];
 		map = child.getSudokuBoardMap();
 		
@@ -296,68 +313,40 @@ public class Crossover
 	
 	private void performCycleCrossover(int num_elements, SudokuBoard solutionBoard, SudokuBoard[][] sudokuPopGen, int currentGen, SecureRandom rand)
 	{
-//       final int length = first.getLength();
-//        if (length != second.getLength()) 
-//        {
-//            throw new DimensionMismatchException(second.getLength(), length);
-//        }
-//
-//        // array representations of the parents
-//        final List<T> parent1Rep = first.getRepresentation();
-//        final List<T> parent2Rep = second.getRepresentation();
-//        // and of the children: do a crossover copy to simplify the later processing
-//        final List<T> child1Rep = new ArrayList<T>(second.getRepresentation());
-//        final List<T> child2Rep = new ArrayList<T>(first.getRepresentation());
-//
-//        // the set of all visited indices so far
-//        final Set<Integer> visitedIndices = new HashSet<Integer>(length);
-//        // the indices of the current cycle
-//        final List<Integer> indices = new ArrayList<Integer>(length);
-//
-//        // determine the starting index
-//        int idx = randomStart ? GeneticAlgorithm.getRandomGenerator().nextInt(length) : 0;
-//        int cycle = 1;
-//
-//        while (visitedIndices.size() < length) 
-//        {
-//            indices.add(idx);
-//
-//            T item = parent2Rep.get(idx);
-//            idx = parent1Rep.indexOf(item);
-//
-//            while (idx != indices.get(0))
-//            {
-//                // add that index to the cycle indices
-//                indices.add(idx);
-//                // get the item in the second parent at that index
-//                item = parent2Rep.get(idx);
-//                // get the index of that item in the first parent
-//                idx = parent1Rep.indexOf(item);
-//            }
-//
-//            // for even cycles: swap the child elements on the indices found in this cycle
-//            if (cycle++ % 2 != 0) 
-//            {
-//                for (int i : indices) 
-//                {
-//                    T tmp = child1Rep.get(i);
-//                    child1Rep.set(i, child2Rep.get(i));
-//                    child2Rep.set(i, tmp);
-//                }
-//            }
-//
-//            visitedIndices.addAll(indices);
-//            // find next starting index: last one + 1 until we find an unvisited index
-//            idx = (indices.get(0) + 1) % length;
-//            while (visitedIndices.contains(idx) && visitedIndices.size() < length) 
-//            {
-//                idx++;
-//                if (idx >= length) 
-//                {
-//                    idx = 0;
-//                }
-//            }
-//            indices.clear();
-//        }
+		SudokuBoard parentA = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
+		SudokuBoard parentB = doRoulette(solutionBoard, sudokuPopGen, currentGen, rand);
+
+		SudokuBoard childA = new SudokuBoard(parentA.getSudokuBoardMap());
+		SudokuBoard childB = new SudokuBoard(parentB.getSudokuBoardMap());
+		
+		List<Integer> cycles = new Vector<Integer>();
+		int cycle_1 = rand.nextInt(9);
+		
+		cycles.add(cycle_1);
+		
+		int row = rand.nextInt(9);
+		
+		int mapA[][] = new int[9][9];
+		mapA = childA.getSudokuBoardMap();
+		
+		int mapB[][] = new int[9][9];
+		mapB = childB.getSudokuBoardMap();
+		
+		int cycle_2 = mapB[row][cycle_1];
+		cycle_1 = mapA[row][cycle_2];
+
+	    while (cycle_1 != cycles.get(0)) 
+	    {
+	    	cycles.add(cycle_1);
+	    	cycle_2 = mapB[row][cycle_1 - 1];
+	    	cycle_1 = mapA[row][cycle_2 - 1];
+	    }
+	    
+	    for (final int index : cycles) 
+	    {
+	    	mapA[row][index] = mapA[row][index] ^ mapB[row][index];	
+	    	mapB[row][index] = mapA[row][index] ^ mapB[row][index];	
+	    	mapA[row][index] = mapA[row][index] ^ mapB[row][index];
+	    }
 	}
 }

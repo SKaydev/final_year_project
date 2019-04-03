@@ -22,9 +22,9 @@ public class Mutation
 		switch(operator)
 		{
 		case 1:
-			doNonUniformMutation(board, sudokuPopGen, currentGen, rand);
+			doNonUniformMutation(board, sudokuPopGen, currentGen, rand); break;
 		case 2:
-			doUniformMutation(board, sudokuPopGen, currentGen, rand);
+			doUniformMutation(board, sudokuPopGen, currentGen, rand); break;
 		}
 	}
 
